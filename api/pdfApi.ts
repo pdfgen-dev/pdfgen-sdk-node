@@ -95,11 +95,11 @@ export class PdfApi {
      * @summary Generate PDF
      * @param req HTML and variables to be converted to PDF
      */
-    public async generatePdf (req: GeneratePDFRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: object;  }> {
+    public async generatePdf (req: GeneratePDFRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
         const localVarPath = this.basePath + '/v1/pdf';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
-        const produces = ['application/json'];
+        const produces = ['application/pdf'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
             localVarHeaderParams.Accept = 'application/json';
@@ -123,7 +123,7 @@ export class PdfApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            json: true,
+            encoding: null,
             body: ObjectSerializer.serialize(req, "GeneratePDFRequest")
         };
 
@@ -146,13 +146,13 @@ export class PdfApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: object;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: Buffer;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            body = ObjectSerializer.deserialize(body, "object");
+                            body = ObjectSerializer.deserialize(body, "Buffer");
                             resolve({ response: response, body: body });
                         } else {
                             reject(new HttpError(response, body, response.statusCode));

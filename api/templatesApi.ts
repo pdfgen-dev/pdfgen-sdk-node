@@ -243,12 +243,12 @@ export class TemplatesApi {
      * @param id Template ID
      * @param variables Variables used for the template
      */
-    public async generatePdfFromTemplate (id: string, variables: object, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: object;  }> {
+    public async generatePdfFromTemplate (id: string, variables: object, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
         const localVarPath = this.basePath + '/v1/templates/{id}/pdf'
             .replace('{' + 'id' + '}', encodeURIComponent(String(id)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
-        const produces = ['application/json'];
+        const produces = ['application/pdf'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
             localVarHeaderParams.Accept = 'application/json';
@@ -277,7 +277,7 @@ export class TemplatesApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            json: true,
+            encoding: null,
             body: ObjectSerializer.serialize(variables, "object")
         };
 
@@ -300,13 +300,13 @@ export class TemplatesApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: object;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: Buffer;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            body = ObjectSerializer.deserialize(body, "object");
+                            body = ObjectSerializer.deserialize(body, "Buffer");
                             resolve({ response: response, body: body });
                         } else {
                             reject(new HttpError(response, body, response.statusCode));
